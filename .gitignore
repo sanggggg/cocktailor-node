@@ -1,0 +1,4 @@
+config/sequelize.json
+.vscode
+node_modules
+src/seeders
