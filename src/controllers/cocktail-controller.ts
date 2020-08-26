@@ -1,7 +1,7 @@
 import { Controller, Get, Wrapper, Post } from "@overnightjs/core";
 import { Request, Response } from "express";
 import Cocktail from "../models/cocktail";
-import asyncHandler from "express-async-handler";
+import * as asyncHandler from "express-async-handler";
 import { Op, literal } from "sequelize";
 import Recipe from "../models/recipe";
 import Ingredient from "../models/ingredient";
@@ -11,8 +11,30 @@ import { FindOptions } from "sequelize/types";
 export class CocktailController {
   @Post("filter")
   async searchByIngredinets(req: Request, res: Response) {
+    /**
+     * @swagger
+     * /api/cocktail/filter:
+     *   post:
+     *     tags: [Cocktail]
+     *     summary: Query cocktails by ingredients
+     *     description: Get cocktails which contains every queried ingredients
+     *     requestBody:
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               ingredients:
+     *                 type: number
+     *                 example:
+     *                   - 4
+     *                   - 308
+     *     responses:
+     *       200:
+     *         description: Cocktails which contains queried ingredients
+     */
     const ingredients: number[] = req.body.ingredients;
-    
+
     const data = await Cocktail.findAll({
       attributes: [
         "id",
@@ -38,6 +60,25 @@ export class CocktailController {
   @Get(":id")
   @Wrapper(asyncHandler)
   async get(req: Request, res: Response) {
+    /**
+     * @swagger
+     * /api/cocktail/{id}:
+     *   get:
+     *     tags: [Cocktail]
+     *     summary: Get cocktail and recipe by cocktail id
+     *     description: Get cocktail and recipe by cocktail id
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         type: number
+     *         required: true
+     *         description: cocktail id
+     *     responses:
+     *       200:
+     *         description: Cocktail and recipe by cocktail id
+     *       404:
+     *         description: No cocktail matched by cocktail id
+     */
     const data = await Cocktail.findByPk(req.params.id, {
       include: [{ model: Recipe, include: [Ingredient] }],
     });
@@ -50,6 +91,28 @@ export class CocktailController {
   @Get("")
   @Wrapper(asyncHandler)
   async getAll(req: Request, res: Response) {
+    /**
+     * @swagger
+     * /api/cocktail:
+     *   get:
+     *     tags: [Cocktail]
+     *     summary: Get all cocktails by prefix or pagenum
+     *     description: Get all cocktails by prefix or pagenum
+     *     parameters:
+     *       - name: page
+     *         in: query
+     *         type: number
+     *         required: false
+     *         description: page of result
+     *       - name: prefix
+     *         in: query
+     *         type: string
+     *         required: false
+     *         description: prefix of result
+     *     responses:
+     *       200:
+     *         description: Cocktails by prefix or pagenum
+     */
     const { page, prefix } = req.query;
 
     const option: FindOptions = {};

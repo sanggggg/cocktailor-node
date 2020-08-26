@@ -1,7 +1,7 @@
 import { ChildControllers, Controller, Get, Wrapper } from "@overnightjs/core";
 import { CocktailController } from "./cocktail-controller";
 import { IngredientController } from "./ingredient-controller";
-import asyncHandler from "express-async-handler";
+import * as asyncHandler from "express-async-handler";
 import { Request, Response } from "express";
 
 @Controller("api")

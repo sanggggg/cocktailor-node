@@ -31,4 +31,7 @@ Backend server written in node.js(express.js)
 
 ````
 - `npm install`
-- `npm run dev`
+- `npm start dev`
+
+## Swagger document
+- At `{serverurl, port}/docs`
